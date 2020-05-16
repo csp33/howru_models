@@ -1,4 +1,4 @@
-from models.Journal.JournalEntry import JournalEntry
+from howru_models.Journal.JournalEntry import JournalEntry
 
 
 class PendingQuestion(JournalEntry):

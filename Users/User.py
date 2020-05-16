@@ -1,6 +1,6 @@
-from helpers.MongoHelper import MongoHelper
+from howru_helpers.MongoHelper import MongoHelper
 from log.logger import logger
-from models.keyboards import flag
+from howru_models.keyboards import flag
 
 
 class User(object):

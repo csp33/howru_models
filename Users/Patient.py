@@ -1,5 +1,5 @@
-from helpers import UTCTime
-from models.Users.User import User
+from howru_helpers import UTCTime
+from howru_models.Users.User import User
 
 
 class Patient(User):

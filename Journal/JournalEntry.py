@@ -1,6 +1,6 @@
 import bson
 
-from helpers.MongoHelper import MongoHelper
+from howru_helpers.MongoHelper import MongoHelper
 from log.logger import logger
 
 

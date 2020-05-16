@@ -1,4 +1,4 @@
-from models.Users.User import User
+from howru_models.Users.User import User
 
 
 class Doctor(User):
