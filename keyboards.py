@@ -1,16 +1,12 @@
 from telegram import ReplyKeyboardMarkup
 
+from howru_helpers.Flag import flag
+
 
 def get_custom_keyboard(values, max_column=2):
     # row_size = len(options) / max_column
     schema = [[value] for value in values]
     return ReplyKeyboardMarkup(schema)
-
-
-def flag(code):
-    OFFSET = 127462 - ord('A')
-    code = code.upper()
-    return chr(ord(code[0]) + OFFSET) + chr(ord(code[1]) + OFFSET)
 
 
 gender_keyboard = {

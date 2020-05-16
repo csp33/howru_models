@@ -1,6 +1,7 @@
+from howru_helpers.Flag import flag
+
 from howru_helpers.MongoHelper import MongoHelper
 from log.logger import logger
-from howru_models.keyboards import flag
 
 
 class User(object):
@@ -110,7 +111,6 @@ class User(object):
     @username.setter
     def username(self, value):
         raise Exception("Username can not be changed")
-
 
     @property
     def language(self):
