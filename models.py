@@ -1,3 +1,5 @@
+from base64 import b64encode
+
 from django.contrib.auth.models import User
 from django_better_admin_arrayfield.models.fields import ArrayField
 from django.db import models
@@ -9,7 +11,7 @@ class Patient(models.Model):
     identifier = models.CharField(primary_key=True, max_length=10)
     name = models.CharField(max_length=100, null=True)
     # picture = models.ImageField()
-    picture = models.CharField(max_length=100, null=True)
+    _picture = models.BinaryField(blank=True, db_column="picture")
     _gender = models.CharField(choices=[("M", "Male"), ("F", "Female"), ("O", "Other")], max_length=1,
                                db_column="gender", null=True)
     language = models.CharField(choices=[("GB", "English"), ("ES", "Spanish")], max_length=2)
@@ -17,6 +19,14 @@ class Patient(models.Model):
     _schedule = models.DateTimeField(
         db_column="schedule"
     )
+
+    @property
+    def picture(self):
+        return b64encode(self._picture).decode('utf-8')
+
+    @picture.setter
+    def picture(self, value):
+        self._picture = open(value, 'rb').read()
 
     @property
     def schedule(self):
