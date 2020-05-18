@@ -39,7 +39,12 @@ class Patient(models.Model):
 
     @property
     def gender(self):
-        return self._gender
+        GENDER_MAPPING = {
+            "M": {"ES": "Masculino", "GB": "Male"},
+            "F": {"ES": "Femenino", "GB": "Female"},
+            "O": {"ES": "Otro", "GB": "Other"},
+        }
+        return GENDER_MAPPING[self._gender][self.language]
 
     @gender.setter
     def gender(self, value):
