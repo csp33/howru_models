@@ -103,6 +103,8 @@ class JournalEntry(models.Model):
 
     class Meta:
         abstract = True
+    def __str__(self):
+        return "{} - {}".format(self.question_id, self.patient_id)
 
 
 class PendingQuestion(JournalEntry):
