@@ -4,13 +4,31 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+# noinspection PyUnresolvedReferences
 from django_better_admin_arrayfield.models.fields import ArrayField
 
 from howru_helpers import UTCTime
 
 
+class Question(models.Model):
+    responses = ArrayField(
+        models.CharField(max_length=50)
+    )
+    text = models.CharField(max_length=100)
+    creator_id = models.ForeignKey('Doctor', on_delete=models.PROTECT)
+    public = models.BooleanField()
+    language = models.CharField(choices=[("GB", "English"), ("ES", "Spanish")], max_length=2)
+
+    def __str__(self):
+        return self.text
+
+
 class Doctor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    assigned_questions = models.ManyToManyField(Question, blank=True)
+
+    def __str__(self):
+        return self.user.username
 
 
 @receiver(post_save, sender=User)
@@ -37,6 +55,9 @@ class Patient(models.Model):
         db_column="schedule"
     )
     assigned_doctor = models.ForeignKey(Doctor, on_delete=models.PROTECT, null=True, blank=True)
+
+    def __str__(self):
+        return self.username
 
     @property
     def picture(self):
@@ -75,20 +96,10 @@ class Patient(models.Model):
         self._gender = gender
 
 
-class Question(models.Model):
-    responses = ArrayField(
-        models.CharField(max_length=50)
-    )
-    text = models.CharField(max_length=100)
-    creator_id = models.ForeignKey(User, on_delete=models.PROTECT)
-    public = models.BooleanField()
-    language = models.CharField(choices=[("GB", "English"), ("ES", "Spanish")], max_length=2)
-
-
 class JournalEntry(models.Model):
     question_id = models.ForeignKey(Question, on_delete=models.PROTECT)
     patient_id = models.ForeignKey(Patient, on_delete=models.PROTECT)
-    doctor_id = models.ForeignKey(User, on_delete=models.PROTECT)
+    doctor_id = models.ForeignKey(Doctor, on_delete=models.PROTECT)
 
     class Meta:
         abstract = True
