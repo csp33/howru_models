@@ -1,10 +1,27 @@
 from base64 import b64encode
 
 from django.contrib.auth.models import User
-from django_better_admin_arrayfield.models.fields import ArrayField
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django_better_admin_arrayfield.models.fields import ArrayField
 
 from howru_helpers import UTCTime
+
+
+class Doctor(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Doctor.objects.create(user=instance)
+
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.doctor.save()
 
 
 class Patient(models.Model):
@@ -19,6 +36,7 @@ class Patient(models.Model):
     _schedule = models.DateTimeField(
         db_column="schedule"
     )
+    assigned_doctor = models.ForeignKey(Doctor, on_delete=models.PROTECT, null=True, blank=True)
 
     @property
     def picture(self):
