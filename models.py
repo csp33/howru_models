@@ -15,7 +15,7 @@ class Question(models.Model):
         models.CharField(max_length=50)
     )
     text = models.CharField(max_length=100)
-    creator_id = models.ForeignKey('Doctor', on_delete=models.PROTECT)
+    creator_id = models.ForeignKey('Doctor', on_delete=models.CASCADE)
     public = models.BooleanField()
     language = models.CharField(choices=[("GB", "English"), ("ES", "Spanish")], max_length=2)
 
@@ -54,7 +54,7 @@ class Patient(models.Model):
     _schedule = models.DateTimeField(
         db_column="schedule"
     )
-    assigned_doctor = models.ForeignKey(Doctor, on_delete=models.PROTECT, null=True, blank=True)
+    assigned_doctor = models.ForeignKey(Doctor, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return self.username
@@ -97,9 +97,9 @@ class Patient(models.Model):
 
 
 class JournalEntry(models.Model):
-    question_id = models.ForeignKey(Question, on_delete=models.PROTECT)
-    patient_id = models.ForeignKey(Patient, on_delete=models.PROTECT)
-    doctor_id = models.ForeignKey(Doctor, on_delete=models.PROTECT)
+    question_id = models.ForeignKey(Question, on_delete=models.CASCADE)
+    patient_id = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    doctor_id = models.ForeignKey(Doctor, on_delete=models.CASCADE)
 
     class Meta:
         abstract = True
