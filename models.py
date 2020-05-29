@@ -54,7 +54,7 @@ class Patient(models.Model):
     _schedule = models.DateTimeField(
         db_column="schedule"
     )
-    assigned_doctor = models.ForeignKey(Doctor, on_delete=models.SET_NULL, null=True, blank=True)
+    assigned_doctors = models.ManyToManyField(Doctor, blank=True)
 
     def __str__(self):
         return self.username
