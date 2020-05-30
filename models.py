@@ -18,6 +18,11 @@ class Question(models.Model):
     creator = models.ForeignKey('Doctor', on_delete=models.CASCADE)
     public = models.BooleanField()
     language = models.CharField(choices=[("GB", "English"), ("ES", "Spanish")], max_length=2)
+    assigned_to_all = models.BooleanField()
+    frequency = models.CharField(
+        choices=[("D", "Daily"), ("W", "Weekly"), ("M", "Monthly"), ("O", "Once")],
+        max_length=1, default="D")
+    priority = models.IntegerField(default=1)
 
     def __str__(self):
         return self.text
@@ -102,6 +107,7 @@ class JournalEntry(models.Model):
 
     class Meta:
         abstract = True
+
     def __str__(self):
         return "{} - {}".format(self.question, self.patient)
 
