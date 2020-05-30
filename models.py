@@ -15,7 +15,7 @@ class Question(models.Model):
         models.CharField(max_length=50)
     )
     text = models.CharField(max_length=100)
-    creator_id = models.ForeignKey('Doctor', on_delete=models.CASCADE)
+    creator = models.ForeignKey('Doctor', on_delete=models.CASCADE)
     public = models.BooleanField()
     language = models.CharField(choices=[("GB", "English"), ("ES", "Spanish")], max_length=2)
 
@@ -45,7 +45,6 @@ def save_user_profile(sender, instance, **kwargs):
 class Patient(models.Model):
     identifier = models.CharField(primary_key=True, max_length=10)
     name = models.CharField(max_length=100, null=True)
-    # picture = models.ImageField()
     _picture = models.BinaryField(blank=True, db_column="picture")
     _gender = models.CharField(choices=[("M", "Male"), ("F", "Female"), ("O", "Other")], max_length=1,
                                db_column="gender", null=True)
@@ -97,14 +96,14 @@ class Patient(models.Model):
 
 
 class JournalEntry(models.Model):
-    question_id = models.ForeignKey(Question, on_delete=models.CASCADE)
-    patient_id = models.ForeignKey(Patient, on_delete=models.CASCADE)
-    doctor_id = models.ForeignKey(Doctor, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
 
     class Meta:
         abstract = True
     def __str__(self):
-        return "{} - {}".format(self.question_id, self.patient_id)
+        return "{} - {}".format(self.question, self.patient)
 
 
 class PendingQuestion(JournalEntry):
