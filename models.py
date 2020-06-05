@@ -31,6 +31,7 @@ class Question(models.Model):
 class Doctor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     assigned_questions = models.ManyToManyField(Question, blank=True)
+    is_analyst = models.BooleanField(default=False)
 
     def __str__(self):
         return self.user.username
