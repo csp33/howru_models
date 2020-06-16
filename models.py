@@ -10,10 +10,14 @@ from django_better_admin_arrayfield.models.fields import ArrayField
 from howru_helpers import UTCTime
 
 
+class Response(models.Model):
+    text = models.CharField(max_length=100)
+    order = models.IntegerField(null=False)
+    question = models.ForeignKey('Question', on_delete=models.CASCADE)
+    def __str__(self):
+        return self.text
+
 class Question(models.Model):
-    responses = ArrayField(
-        models.CharField(max_length=50)
-    )
     text = models.CharField(max_length=100)
     creator = models.ForeignKey('Doctor', on_delete=models.CASCADE)
     public = models.BooleanField()
@@ -110,7 +114,7 @@ class JournalEntry(models.Model):
         abstract = True
 
     def __str__(self):
-        return "{} - {}".format(self.question, self.patient)
+        return "{} - {} - {}".format(self.question, self.patient, self.doctor)
 
 
 class PendingQuestion(JournalEntry):
@@ -119,4 +123,7 @@ class PendingQuestion(JournalEntry):
 
 class AnsweredQuestion(JournalEntry):
     answer_date = models.DateTimeField()
-    response = models.CharField(max_length=100)
+    response = models.ForeignKey(Response, on_delete=models.CASCADE)
+    def __str__(self):
+        base = str(super())
+        return f'{base} - {self.response} - {self.answer_date}'
